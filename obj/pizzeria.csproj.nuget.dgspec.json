@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/daniel/Documents/SliceForLifeProject/pizzeria.csproj": {}
+    "/Users/daniel/SliceForLifeProject/pizzeria.csproj": {}
   },
   "projects": {
-    "/Users/daniel/Documents/SliceForLifeProject/pizzeria.csproj": {
+    "/Users/daniel/SliceForLifeProject/pizzeria.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/daniel/Documents/SliceForLifeProject/pizzeria.csproj",
+        "projectUniqueName": "/Users/daniel/SliceForLifeProject/pizzeria.csproj",
         "projectName": "pizzeria",
-        "projectPath": "/Users/daniel/Documents/SliceForLifeProject/pizzeria.csproj",
+        "projectPath": "/Users/daniel/SliceForLifeProject/pizzeria.csproj",
         "packagesPath": "/Users/daniel/.nuget/packages/",
-        "outputPath": "/Users/daniel/Documents/SliceForLifeProject/obj/",
+        "outputPath": "/Users/daniel/SliceForLifeProject/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/daniel/.nuget/NuGet/NuGet.Config"
