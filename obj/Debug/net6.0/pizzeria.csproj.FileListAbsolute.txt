@@ -1,0 +1,15 @@
+/Users/daniel/Documents/SliceForLifeProject/bin/Debug/net6.0/pizzeria
+/Users/daniel/Documents/SliceForLifeProject/bin/Debug/net6.0/pizzeria.deps.json
+/Users/daniel/Documents/SliceForLifeProject/bin/Debug/net6.0/pizzeria.runtimeconfig.json
+/Users/daniel/Documents/SliceForLifeProject/bin/Debug/net6.0/pizzeria.dll
+/Users/daniel/Documents/SliceForLifeProject/bin/Debug/net6.0/pizzeria.pdb
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.csproj.AssemblyReference.cache
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.GeneratedMSBuildEditorConfig.editorconfig
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.AssemblyInfoInputs.cache
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.AssemblyInfo.cs
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.csproj.CoreCompileInputs.cache
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.dll
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/refint/pizzeria.dll
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.pdb
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/pizzeria.genruntimeconfig.cache
+/Users/daniel/Documents/SliceForLifeProject/obj/Debug/net6.0/ref/pizzeria.dll
