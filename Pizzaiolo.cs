@@ -9,9 +9,9 @@ namespace pizzeria
         {
             this._id = id;
         }
-        public void Start()
+        public void start()
         {
-            
+            try { life(); } catch { start(); }
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
@@ -24,7 +24,7 @@ namespace pizzeria
             Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
 
 
-            p = Program.order.First();
+            p = Program.order.First(); // ERROR: is empty list
             Program.order.RemoveFirst();
 
             //work on pizza

@@ -31,7 +31,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //init pizzaioli and customers
             InitPeople();
             //activate pizzaioli
-            ActivatePizzaioli();
+            ActivatePizzaioli(); // DANI: infinite loop, sequentially stuck in try catch statement inside statr() func
             //activate customers
             ActivateCustomers();
             // insert code here if necessary
@@ -46,19 +46,25 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void ActivateCustomers() // todo: implement this method
         {
-
+            for (int i = 0; i < customers.Length; i++)
+            {
+                customers[i].start();
+            }
         }
 
         private static void ActivatePizzaioli() //todo: implement this method
         {
-
+            for (int i = 0; i < pizzaioli.Length; i++)
+            {
+                pizzaioli[i].start();
+            }
         }
 
         private static void InitPeople()
         {
-            for (int i = 0; i < n_customers; i++) // init both customer & pizzaiolo
+            for (int i = 0; i < n_customers; i++)
             {
-                pizzaioli[i] = new Pizzaiolo(i + 1); // starting at 1
+                pizzaioli[i] = new Pizzaiolo(i + 1);
                 customers[i] = new Customer(i + 1);
             }
         }

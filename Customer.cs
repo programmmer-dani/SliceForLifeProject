@@ -9,12 +9,12 @@ namespace pizzeria
             this._id = id;
         }
 
-        public void Start()
+        public void start()
         {
-            
+            try { life(); } catch { start(); }
         }
 
-        public void Life() // customer: feel free to add instructions to make it thread safe.
+        public void life() // customer: feel free to add instructions to make it thread safe.
         {
             Thread.Sleep(new Random().Next(50, 200));
 
@@ -37,7 +37,7 @@ namespace pizzeria
             PizzaDish pizza;
             var temp = false;
 
-            pizza = Program.pickUp.First();
+            pizza = Program.pickUp.First(); // ERROR: is empty list
 
             //remove one slice
 
