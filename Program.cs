@@ -8,14 +8,16 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
     {
         public static int n_slices = 4; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 20; // must be a multiple of n_slices, default: 1000
+        public static int n_customers = 12; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
 
+        public static Mutex orderMutex = new Mutex();
+        public static Mutex pickupMutex = new Mutex();
+        public static Mutex workingsurfaceMutex = new Mutex();
         //do not change any class variable under this line
-        public static LinkedList<PizzaOrder> order = new();
-        public static LinkedList<PizzaDish> pickUp = new();
-        public static LinkedList<PizzaSlice> workingsurface = new();
-
+        public static LinkedList<PizzaOrder> order = new(); // DANI: mutex
+        public static LinkedList<PizzaDish> pickUp = new(); // DANI: mutex - every customer picks 1 slices + (?semaphore? allowing 4 clients to wait inside....?)
+        public static LinkedList<PizzaSlice> workingsurface = new();// DANI: mutex (list containing n_slices (4) )
         public static Pizzaiolo[] pizzaioli = new Pizzaiolo[n_pizzaioli];
         public static Customer[] customers = new Customer[n_customers];
         static void Main(string[] args)
@@ -50,18 +52,18 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void ActivateCustomers() // todo: implement this method
         {
-            for (int i = 0; i < customers.Length-1; i++)
+            for (int i = 0; i < customers.Length - 1; i++)
             {
-                Thread thread = new Thread(() => customers[i].start());
+                Thread thread = new Thread(() => customers[i].start(orderMutex, pickupMutex, workingsurfaceMutex));
                 thread.Start();
             }
         }
 
         private static void ActivatePizzaioli() //todo: implement this method
         {
-            for (int i = 0; i < pizzaioli.Length-1; i++)
+            for (int i = 0; i < pizzaioli.Length - 1; i++)
             {
-                Thread thread = new Thread(() => pizzaioli[i].start());
+                Thread thread = new Thread(() => pizzaioli[i].start(orderMutex, pickupMutex, workingsurfaceMutex));
                 thread.Start(); // DANI: maybe put in list so threads can be called to join later on??
             }
         }
