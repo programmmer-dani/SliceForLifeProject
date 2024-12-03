@@ -8,7 +8,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
     {
         public static int n_slices = 4; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 1000; // must be a multiple of n_slices, default: 1000
+        public static int n_customers = 20; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
 
         //do not change any class variable under this line
@@ -30,12 +30,16 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //do not change any code of the following 3 function call. You can add code before and after them
             //init pizzaioli and customers
             InitPeople();
+            Console.WriteLine("people initiated");
             //activate pizzaioli
-            ActivatePizzaioli(); // DANI: infinite loop, sequentially stuck in try catch statement inside statr() func
+            ActivatePizzaioli();
+            System.Console.WriteLine("pizzaioli active");
             //activate customers
             ActivateCustomers();
+            System.Console.WriteLine("customers active");
             // insert code here if necessary
 
+            // DANI: join all the threads
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
@@ -48,7 +52,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < customers.Length; i++)
             {
-                customers[i].start();
+                Thread thread = new Thread(() => customers[i].start());
+                thread.Start();
             }
         }
 
@@ -56,7 +61,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < pizzaioli.Length; i++)
             {
-                pizzaioli[i].start();
+                Thread thread = new Thread(() => pizzaioli[i].start());
+                thread.Start();
             }
         }
 
@@ -64,8 +70,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < n_customers; i++)
             {
-                pizzaioli[i] = new Pizzaiolo(i + 1);
                 customers[i] = new Customer(i + 1);
+                pizzaioli[i] = new Pizzaiolo(i + 1);
             }
         }
     }
