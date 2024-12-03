@@ -11,7 +11,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         public static int n_customers = 1000; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
 
-//do not change any class variable under this line
+        //do not change any class variable under this line
         public static LinkedList<PizzaOrder> order = new();
         public static LinkedList<PizzaDish> pickUp = new();
         public static LinkedList<PizzaSlice> workingsurface = new();
@@ -27,17 +27,17 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             }
             //init environment variables here if needed
 
-//do not change any code of the following 3 function call. You can add code before and after them
+            //do not change any code of the following 3 function call. You can add code before and after them
             //init pizzaioli and customers
             InitPeople();
             //activate pizzaioli
             ActivatePizzaioli();
             //activate customers
             ActivateCustomers();
-// insert code here if necessary
+            // insert code here if necessary
 
 
-// DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
+            // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
             Console.WriteLine($"Pickup location: There are {pickUp.Count} pizzas left.");
             Console.WriteLine($"Working location: There are {workingsurface.Count} slices left.");
@@ -56,7 +56,11 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void InitPeople()
         {
-
+            for (int i = 0; i < n_customers; i++) // init both customer & pizzaiolo
+            {
+                pizzaioli[i] = new Pizzaiolo(i + 1); // starting at 1
+                customers[i] = new Customer(i + 1);
+            }
         }
     }
 
@@ -89,7 +93,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         }
     }
     public class PizzaOrder //DO NOT TOUCH THIS CLASS
-    { 
+    {
         private int sliceprepared = 0;
         public OrderState State { get; private set; }
         public PizzaOrder()
