@@ -50,7 +50,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void ActivateCustomers() // todo: implement this method
         {
-            for (int i = 0; i < customers.Length; i++)
+            for (int i = 0; i < customers.Length-1; i++)
             {
                 Thread thread = new Thread(() => customers[i].start());
                 thread.Start();
@@ -59,10 +59,10 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void ActivatePizzaioli() //todo: implement this method
         {
-            for (int i = 0; i < pizzaioli.Length; i++)
+            for (int i = 0; i < pizzaioli.Length-1; i++)
             {
                 Thread thread = new Thread(() => pizzaioli[i].start());
-                thread.Start();
+                thread.Start(); // DANI: maybe put in list so threads can be called to join later on??
             }
         }
 

@@ -11,7 +11,12 @@ namespace pizzeria
         }
         public void start()
         {
-            try { life(); } catch { start(); }
+            try { life(); }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                start();
+            }
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
@@ -23,10 +28,10 @@ namespace pizzeria
 
             Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
 
-// lock ?
+            // lock ?
             p = Program.order.First(); // ERROR: is empty list
             Program.order.RemoveFirst();
-// unlock ?
+            // unlock ?
 
             //work on pizza
             Thread.Sleep(new Random().Next(50, 200));
@@ -61,10 +66,10 @@ namespace pizzeria
 
                 if (Program.workingsurface.Count == Program.n_slices)
                 {
-// lock ?
+                    // lock ?
                     Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString()));
                     //Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
-// unlock ?
+                    // unlock ?
                     Program.workingsurface.Clear();
                 }
             }
