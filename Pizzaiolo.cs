@@ -38,7 +38,6 @@ namespace pizzeria
             Thread.Sleep(new Random().Next(50, 200));
 
             //finish pizza slice
-
             //Console.WriteLine($"Pizzaiolo {_id} about to finish the pizza slice");
 
             PizzaSlice s = p.FinishWorking(_id.ToString()); //feel free to change the init of the ID
