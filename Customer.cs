@@ -37,20 +37,28 @@ namespace pizzeria
             // pick up pizza slice when possible
             // no more than n_slices slices per pizza so no more than n_slices customers time over the order.
 
-            PizzaDish pizza;
+            PizzaDish pizza = new PizzaDish(0, "");
             var temp = false;
 
             Program.pickupMutex.WaitOne(); // lock
-            pizza = Program.pickUp.First(); // ERROR: is empty list
-            //remove one slice
-            pizza.RemoveSlice();
-            if (pizza.Slices == 0) //the dish is empty take it out.
+            try
             {
-                //if it is the last slice remove the pizza from the pick up
-                Program.pickUp.RemoveFirst();
-                temp = true;
+                pizza = Program.pickUp.First(); // ERROR: is empty list
+                                                //remove one slice
+                pizza.RemoveSlice();
+                if (pizza.Slices == 0) //the dish is empty take it out.
+                {
+                    //if it is the last slice remove the pizza from the pick up
+                    Program.pickUp.RemoveFirst();
+                    temp = true;
+                }
+                Program.pickupMutex.ReleaseMutex(); // unlock
             }
-            Program.pickupMutex.ReleaseMutex(); // unlock
+            catch
+            {
+                Program.pickupMutex.ReleaseMutex(); // unlock
+                life();
+            }
 
             if (temp)
             {

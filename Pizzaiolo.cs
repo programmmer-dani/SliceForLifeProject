@@ -65,7 +65,7 @@ namespace pizzeria
             //      clear the working surface
             //      add the pizza to the pick up
 
-            Program.workingsurfaceMutex.WaitOne();// lock
+            Program.workingsurfaceMutex.WaitOne();// lock ERROR: abandoned mutex???
             if (Program.workingsurface.Count < Program.n_slices)
             {
                 Program.workingsurface.AddFirst(s);

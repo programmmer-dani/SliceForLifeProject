@@ -8,7 +8,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
     {
         public static int n_slices = 1; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 4; // must be a multiple of n_slices, default: 1000
+                                        // IF n_slices INCREASED, NEW BUGS OCCUR
+        public static int n_customers = 12; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
         public static Mutex orderMutex = new Mutex();
         public static Mutex pickupMutex = new Mutex();
@@ -43,8 +44,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             // insert code here if necessary
 
             // DANI: join all the threads
-            joinAllThreads();
-            System.Console.WriteLine("all threads joined successfully");
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
@@ -59,6 +58,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             {
                 customerThreads[i].Start();
             }
+            //joinAllThreads();
         }
 
         private static void ActivatePizzaioli() //todo: implement this method
@@ -80,19 +80,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
                 Customer customer = new Customer(i + 1);
                 pizzaioliThreads[i] = new Thread(() => pizziolo.start());
                 customerThreads[i] = new Thread(() => customer.start());
-            }
-        }
-
-        public static void joinAllThreads()
-        {
-            for (int i = 0; i < customerThreads.Length; i++)
-            {
-                pizzaioliThreads[i].Join();
-                customerThreads[i].Join();
-                // Thread joinPizzaioli = new Thread(() => pizzaioliThreads[i].Join());
-                // Thread joinCustomers = new Thread(() => customerThreads[i].Join());
-                // joinPizzaioli.Start();
-                // joinCustomers.Start();
             }
         }
     }
