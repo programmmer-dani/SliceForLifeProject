@@ -6,16 +6,21 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 {
     internal class Program // feel free to add methods/variables to this class
     {
-        public static int n_slices = 1; // Number of slices per pizza, 
+        public static int n_slices = 4; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
                                         // IF n_slices INCREASED, NEW BUGS OCCUR
         public static int n_customers = 12; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
-        public static Semaphore orderSemaphore = new Semaphore(0, 1); // starts locked until customer unlocks
-        public static Semaphore pickupSemaphore = new Semaphore(1, 1);
-        public static Semaphore workingsurfaceSemaphore = new Semaphore(1, 1);
+        public static Semaphore orderSemaphore = new Semaphore(0, n_customers); // starts locked until customer unlocks
+        public static Mutex orderMutex = new Mutex();
+        public static Semaphore pickupSemaphore = new Semaphore(0, n_customers);
+        public static Mutex pickupMutex = new Mutex();
+        public static Mutex workingsurfaceMutex = new Mutex();
         public static Thread[] pizzaioliThreads = new Thread[n_customers];
         public static Thread[] customerThreads = new Thread[n_customers];
+        public static bool customersStarted = false;
+        public static bool pizzaioliStarted = false;
+
         //do not change any class variable under this line
         public static LinkedList<PizzaOrder> order = new(); // DANI: mutex
         public static LinkedList<PizzaDish> pickUp = new(); // DANI: mutex - every customer picks 1 slices + (?semaphore? allowing 4 clients to wait inside....?)
@@ -45,11 +50,23 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
             // DANI: join all the threads
 
+
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
-            Console.WriteLine("All should customers have eaten a pizza slice.");
-            Console.WriteLine($"Pickup location: There are {pickUp.Count} pizzas left.");
-            Console.WriteLine($"Working location: There are {workingsurface.Count} slices left.");
-            Console.WriteLine($"Order location: There are {order.Count} orders left.");
+            while (true) //DEBUG PURPOSE
+            {
+                if (pizzaioliStarted && customersStarted)
+                {
+                    for (int i = 0; i < pizzaioliThreads.Length; i++)
+                    {
+                        pizzaioliThreads[i].Join();
+                        customerThreads[i].Join();
+                    }
+                    Console.WriteLine("All should customers have eaten a pizza slice.");
+                    Console.WriteLine($"Pickup location: There are {pickUp.Count} pizzas left.");
+                    Console.WriteLine($"Working location: There are {workingsurface.Count} slices left.");
+                    Console.WriteLine($"Order location: There are {order.Count} orders left.");
+                }
+            }
         }
 
         private static void ActivateCustomers() // todo: implement this method
@@ -58,7 +75,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             {
                 customerThreads[i].Start();
             }
-            //joinAllThreads();
+            customersStarted = true;
         }
 
         private static void ActivatePizzaioli() //todo: implement this method
@@ -68,6 +85,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
                 // here start threads from the list
                 pizzaioliThreads[i].Start();
             }
+            pizzaioliStarted = true;
         }
 
         private static void InitPeople()

@@ -20,16 +20,16 @@ namespace pizzeria
 
             //wait to order a pizza slice
             //order pizza slice
-            Console.WriteLine($"Customer {_id} about to order a pizza slice");
 
             PizzaOrder p = new();
 
-            Program.orderSemaphore.WaitOne(); // waits untill safe to enter
+            Program.orderMutex.WaitOne();
+            Console.WriteLine($"Customer {_id} about to order a pizza slice");
             Program.order.AddFirst(p);
-            Program.orderSemaphore.Release(); // releases lock (allowing others to enter)
-
             // wait a bit
             Console.WriteLine($"Customer {_id} waits for a pizza slice");
+            Program.orderMutex.ReleaseMutex();
+            Program.orderSemaphore.Release();
 
             Thread.Sleep(new Random().Next(100, 500));
 
@@ -40,31 +40,26 @@ namespace pizzeria
             PizzaDish pizza = new PizzaDish(0, "");
             var temp = false;
 
-            Program.pickupSemaphore.WaitOne(); // lock
-            try
+            Program.pickupSemaphore.WaitOne(); // wait until (notified) that pizza is ready (happens 4 at a time)
+            Program.pickupMutex.WaitOne(); // claim 1 slice
+            pizza = Program.pickUp.First(); // ERROR: is empty list
+                                            //remove one slice
+            System.Console.WriteLine($"Customer {_id} picked up his order | {pizza.Slices} : {Program.pickUp.Count}");
+            pizza.RemoveSlice();
+            if (pizza.Slices == 0) //the dish is empty take it out.
             {
-                pizza = Program.pickUp.First(); // ERROR: is empty list
-                                                //remove one slice
-                pizza.RemoveSlice();
-                if (pizza.Slices == 0) //the dish is empty take it out.
-                {
-                    //if it is the last slice remove the pizza from the pick up
-                    Program.pickUp.RemoveFirst();
-                    temp = true;
-                }
-                Program.pickupSemaphore.Release(); // unlock
+                //if it is the last slice remove the pizza from the pick up
+                Program.pickUp.RemoveFirst();
+                temp = true;
             }
-            catch
-            {
-                Program.pickupSemaphore.Release(); // unlock
-                life();
-            }
+            Program.pickupMutex.ReleaseMutex();
+
 
             if (temp)
             {
-                Console.WriteLine($"Customer {_id} has eaten a pizza the final slice total slices: {pizza.Slices} {Program.pickUp.Count}"); // DANI: CW's shouldn't be in mutex wright?
+                //  Console.WriteLine($"Customer {_id} has eaten a pizza the final slice total slices: {pizza.Slices} {Program.pickUp.Count}");
             }
-            Console.WriteLine($"Customer {_id} has eaten a slice a pizza total slices: {pizza.Slices} {Program.pickUp.Count}");
+            //Console.WriteLine($"Customer {_id} has eaten a slice a pizza total slices: {pizza.Slices} {Program.pickUp.Count}");
         }
     }
 }

@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace pizzeria
 {
     public class Pizzaiolo // you can alter the signature and contents of this class as needed
@@ -11,33 +13,22 @@ namespace pizzeria
         }
         public void start()
         {
-            Program.orderSemaphore.WaitOne();   // wait untill first order is placed
-                                                // maybe use flag for this instead of mutex
-            Program.orderSemaphore.Release();
+            Program.orderSemaphore.WaitOne(); // wait until order is placed
             life();
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
-            // wait for a customer to order a pizza slice
 
             Thread.Sleep(new Random().Next(50, 200));
 
             PizzaOrder p = new();
 
-            Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
 
-            Program.orderSemaphore.WaitOne(); // lock
-            try
-            {
-                p = Program.order.First(); // ERROR: is empty list
-                Program.order.RemoveFirst();
-                Program.orderSemaphore.Release(); // unlock
-            }
-            catch
-            {
-                Program.orderSemaphore.Release(); // unlock
-                life();
-            };
+            Program.orderMutex.WaitOne();
+            Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
+            p = Program.order.First();
+            Program.order.RemoveFirst();
+            Program.orderMutex.ReleaseMutex();
 
             //work on pizza
             Thread.Sleep(new Random().Next(50, 200));
@@ -48,7 +39,7 @@ namespace pizzeria
 
             //finish pizza slice
 
-            Console.WriteLine($"Pizzaiolo {_id} about to finish the pizza slice");
+            //Console.WriteLine($"Pizzaiolo {_id} about to finish the pizza slice");
 
             PizzaSlice s = p.FinishWorking(_id.ToString()); //feel free to change the init of the ID
                                                             // with anything that can help you debug
@@ -58,14 +49,14 @@ namespace pizzeria
             // deposit the pizza slice
             // if the working surface contains less than n_slices slices
             //          Add the pizza slice to the working surface
-            Console.WriteLine($"Pizzaiolo {_id} about to deposit the pizza slice");
+            // Console.WriteLine($"Pizzaiolo {_id} about to deposit the pizza slice"); DEHARDCODE
             //if the pizza is not full
             //      add the pizza slice to the working surface
             //if the pizza is full
             //      clear the working surface
             //      add the pizza to the pick up
 
-            Program.workingsurfaceSemaphore.WaitOne();// lock ERROR: abandoned mutex???
+            Program.workingsurfaceMutex.WaitOne();
             if (Program.workingsurface.Count < Program.n_slices)
             {
                 Program.workingsurface.AddFirst(s);
@@ -73,22 +64,31 @@ namespace pizzeria
 
                 if (Program.workingsurface.Count == Program.n_slices)
                 {
-                    Program.pickupSemaphore.WaitOne(); // lock
-                    Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString()));
-                    //Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
-                    Program.pickupSemaphore.Release(); // unlock
+                    Program.pickupMutex.WaitOne(); // claim pickup counter
+                    Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString())); // 4 unlocks for pickup counter
+                    Console.WriteLine($"Pizzaiolo {_id} finished a slice."); //this is for debug purposes
+                    Program.pickupMutex.ReleaseMutex(); // release pickup counter
+
+                    // 4 orders are now ready
+                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+
+                    Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
                     Program.workingsurface.Clear();
-                    Program.workingsurfaceSemaphore.Release();// unlock
                 }
+                Program.workingsurfaceMutex.ReleaseMutex();
             }
             else
             {
+                Program.workingsurfaceMutex.ReleaseMutex();
                 throw new Exception($"Pizzaiolo {_id} [MISTAKE!]");
                 //Console.WriteLine($"Pizzaiolo{_id} [MISTAKE!]"); //this is for debug purposes
             }
 
 
-            Console.WriteLine($"Pizzaiolo{_id} finished and goes to sleep.");
+            // Console.WriteLine($"Pizzaiolo{_id} finished and goes to sleep."); DEHARDCODE
             // if the working surface contains exactly n_slices slices
             //          add the pizza to the pick up
         }
