@@ -11,12 +11,10 @@ namespace pizzeria
         }
         public void start()
         {
-            try { life(); }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e);
-                start();
-            }
+            Program.orderMutex.WaitOne();   // wait untill first order is placed
+                                            // maybe use flag for this instead of mutex
+            Program.orderMutex.ReleaseMutex();
+            life();
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
@@ -24,15 +22,22 @@ namespace pizzeria
 
             Thread.Sleep(new Random().Next(50, 200));
 
-            PizzaOrder p;
+            PizzaOrder p = new();
 
             Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
 
-
             Program.orderMutex.WaitOne(); // lock
-            p = Program.order.First(); // ERROR: is empty list
-            Program.order.RemoveFirst();
-            Program.orderMutex.ReleaseMutex(); // unlock
+            try
+            {
+                p = Program.order.First(); // ERROR: is empty list
+                Program.order.RemoveFirst();
+                Program.orderMutex.ReleaseMutex(); // unlock
+            }
+            catch
+            {
+                Program.orderMutex.ReleaseMutex(); // unlock
+                life();
+            };
 
             //work on pizza
             Thread.Sleep(new Random().Next(50, 200));

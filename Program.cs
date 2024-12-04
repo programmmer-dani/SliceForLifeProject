@@ -6,14 +6,15 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 {
     internal class Program // feel free to add methods/variables to this class
     {
-        public static int n_slices = 4; // Number of slices per pizza, 
+        public static int n_slices = 1; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 12; // must be a multiple of n_slices, default: 1000
+        public static int n_customers = 4; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
-
         public static Mutex orderMutex = new Mutex();
         public static Mutex pickupMutex = new Mutex();
         public static Mutex workingsurfaceMutex = new Mutex();
+        public static Thread[] pizzaioliThreads = new Thread[n_customers];
+        public static Thread[] customerThreads = new Thread[n_customers];
         //do not change any class variable under this line
         public static LinkedList<PizzaOrder> order = new(); // DANI: mutex
         public static LinkedList<PizzaDish> pickUp = new(); // DANI: mutex - every customer picks 1 slices + (?semaphore? allowing 4 clients to wait inside....?)
@@ -42,6 +43,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             // insert code here if necessary
 
             // DANI: join all the threads
+            joinAllThreads();
+            System.Console.WriteLine("all threads joined successfully");
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
@@ -54,8 +57,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < customers.Length - 1; i++)
             {
-                Thread thread = new Thread(() => customers[i].start());
-                thread.Start();
+                customerThreads[i].Start();
             }
         }
 
@@ -63,8 +65,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < pizzaioli.Length - 1; i++)
             {
-                Thread thread = new Thread(() => pizzaioli[i].start());
-                thread.Start(); // DANI: maybe put in list so threads can be called to join later on??
+                // here start threads from the list
+                pizzaioliThreads[i].Start();
             }
         }
 
@@ -72,8 +74,25 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < n_customers; i++)
             {
-                customers[i] = new Customer(i + 1);
-                pizzaioli[i] = new Pizzaiolo(i + 1);
+                //customers[i] = new Customer(i + 1);
+                //pizzaioli[i] = new Pizzaiolo(i + 1);
+                Pizzaiolo pizziolo = new Pizzaiolo(i + 1);
+                Customer customer = new Customer(i + 1);
+                pizzaioliThreads[i] = new Thread(() => pizziolo.start());
+                customerThreads[i] = new Thread(() => customer.start());
+            }
+        }
+
+        public static void joinAllThreads()
+        {
+            for (int i = 0; i < customerThreads.Length; i++)
+            {
+                pizzaioliThreads[i].Join();
+                customerThreads[i].Join();
+                // Thread joinPizzaioli = new Thread(() => pizzaioliThreads[i].Join());
+                // Thread joinCustomers = new Thread(() => customerThreads[i].Join());
+                // joinPizzaioli.Start();
+                // joinCustomers.Start();
             }
         }
     }

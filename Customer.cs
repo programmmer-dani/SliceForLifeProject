@@ -11,12 +11,7 @@ namespace pizzeria
 
         public void start()
         {
-            try { life(); }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e);
-                start();
-            }
+            life();
         }
 
         public void life() // customer: feel free to add instructions to make it thread safe.
