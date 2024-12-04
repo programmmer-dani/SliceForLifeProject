@@ -24,9 +24,9 @@ namespace pizzeria
 
             PizzaOrder p = new();
 
-            Program.orderMutex.WaitOne(); // waits untill safe to enter
+            Program.orderSemaphore.WaitOne(); // waits untill safe to enter
             Program.order.AddFirst(p);
-            Program.orderMutex.Release(); // releases lock (allowing others to enter)
+            Program.orderSemaphore.Release(); // releases lock (allowing others to enter)
 
             // wait a bit
             Console.WriteLine($"Customer {_id} waits for a pizza slice");
@@ -40,7 +40,7 @@ namespace pizzeria
             PizzaDish pizza = new PizzaDish(0, "");
             var temp = false;
 
-            Program.pickupMutex.WaitOne(); // lock
+            Program.pickupSemaphore.WaitOne(); // lock
             try
             {
                 pizza = Program.pickUp.First(); // ERROR: is empty list
@@ -52,11 +52,11 @@ namespace pizzeria
                     Program.pickUp.RemoveFirst();
                     temp = true;
                 }
-                Program.pickupMutex.Release(); // unlock
+                Program.pickupSemaphore.Release(); // unlock
             }
             catch
             {
-                Program.pickupMutex.Release(); // unlock
+                Program.pickupSemaphore.Release(); // unlock
                 life();
             }
 
