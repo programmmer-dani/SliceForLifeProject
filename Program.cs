@@ -11,8 +11,8 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
                                         // IF n_slices INCREASED, NEW BUGS OCCUR
         public static int n_customers = 12; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
-        public static Mutex orderMutex = new Mutex();
-        public static Mutex pickupMutex = new Mutex();
+        public static Semaphore orderMutex = new Semaphore(1,1);
+        public static Semaphore pickupMutex = new Semaphore(1,1);
         public static Mutex workingsurfaceMutex = new Mutex();
         public static Thread[] pizzaioliThreads = new Thread[n_customers];
         public static Thread[] customerThreads = new Thread[n_customers];

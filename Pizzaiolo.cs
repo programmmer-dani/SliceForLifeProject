@@ -13,7 +13,7 @@ namespace pizzeria
         {
             Program.orderMutex.WaitOne();   // wait untill first order is placed
                                             // maybe use flag for this instead of mutex
-            Program.orderMutex.ReleaseMutex();
+            Program.orderMutex.Release();
             life();
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
@@ -31,11 +31,11 @@ namespace pizzeria
             {
                 p = Program.order.First(); // ERROR: is empty list
                 Program.order.RemoveFirst();
-                Program.orderMutex.ReleaseMutex(); // unlock
+                Program.orderMutex.Release(); // unlock
             }
             catch
             {
-                Program.orderMutex.ReleaseMutex(); // unlock
+                Program.orderMutex.Release(); // unlock
                 life();
             };
 
@@ -76,7 +76,7 @@ namespace pizzeria
                     Program.pickupMutex.WaitOne(); // lock
                     Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString()));
                     //Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
-                    Program.pickupMutex.ReleaseMutex(); // unlock
+                    Program.pickupMutex.Release(); // unlock
                     Program.workingsurface.Clear();
                     Program.workingsurfaceMutex.ReleaseMutex();// unlock
                 }

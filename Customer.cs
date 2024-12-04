@@ -26,7 +26,7 @@ namespace pizzeria
 
             Program.orderMutex.WaitOne(); // waits untill safe to enter
             Program.order.AddFirst(p);
-            Program.orderMutex.ReleaseMutex(); // releases lock (allowing others to enter)
+            Program.orderMutex.Release(); // releases lock (allowing others to enter)
 
             // wait a bit
             Console.WriteLine($"Customer {_id} waits for a pizza slice");
@@ -52,11 +52,11 @@ namespace pizzeria
                     Program.pickUp.RemoveFirst();
                     temp = true;
                 }
-                Program.pickupMutex.ReleaseMutex(); // unlock
+                Program.pickupMutex.Release(); // unlock
             }
             catch
             {
-                Program.pickupMutex.ReleaseMutex(); // unlock
+                Program.pickupMutex.Release(); // unlock
                 life();
             }
 
