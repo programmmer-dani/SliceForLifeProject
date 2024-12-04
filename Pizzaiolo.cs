@@ -69,11 +69,11 @@ namespace pizzeria
                     Console.WriteLine($"Pizzaiolo {_id} finished a slice."); //this is for debug purposes
                     Program.pickupMutex.ReleaseMutex(); // release pickup counter
 
-                    // 4 orders are now ready
-                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
-                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
-                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
-                    Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+                    // n_slices orders are now ready
+                    for (int i = 0; i < Program.n_slices; i++)
+                    {
+                        Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 4x
+                    }
 
                     Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
                     Program.workingsurface.Clear();
