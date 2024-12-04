@@ -9,16 +9,16 @@ namespace pizzeria
         {
             this._id = id;
         }
-        public void start(Mutex orderMutex, Mutex pickupMutex, Mutex workingsurfaceMutex)
+        public void start()
         {
-            try { life(orderMutex, pickupMutex, workingsurfaceMutex); }
+            try { life(); }
             catch (Exception e)
             {
                 System.Console.WriteLine(e);
-                start(orderMutex, pickupMutex, workingsurfaceMutex);
+                start();
             }
         }
-        public void life(Mutex orderMutex, Mutex pickupMutex, Mutex workingsurfaceMutex) // pizzaiolo: feel free to add instructions to make it thread safe.
+        public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
             // wait for a customer to order a pizza slice
 
@@ -28,10 +28,11 @@ namespace pizzeria
 
             Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
 
-            orderMutex.WaitOne(); // lock
+
+            Program.orderMutex.WaitOne(); // lock
             p = Program.order.First(); // ERROR: is empty list
             Program.order.RemoveFirst();
-            orderMutex.ReleaseMutex(); // unlock
+            Program.orderMutex.ReleaseMutex(); // unlock
 
             //work on pizza
             Thread.Sleep(new Random().Next(50, 200));
@@ -59,7 +60,7 @@ namespace pizzeria
             //      clear the working surface
             //      add the pizza to the pick up
 
-            workingsurfaceMutex.WaitOne();// lock
+            Program.workingsurfaceMutex.WaitOne();// lock
             if (Program.workingsurface.Count < Program.n_slices)
             {
                 Program.workingsurface.AddFirst(s);
@@ -67,12 +68,12 @@ namespace pizzeria
 
                 if (Program.workingsurface.Count == Program.n_slices)
                 {
-                    pickupMutex.WaitOne(); // lock
+                    Program.pickupMutex.WaitOne(); // lock
                     Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString()));
                     //Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
-                    pickupMutex.ReleaseMutex(); // unlock
+                    Program.pickupMutex.ReleaseMutex(); // unlock
                     Program.workingsurface.Clear();
-                    workingsurfaceMutex.ReleaseMutex();// unlock
+                    Program.workingsurfaceMutex.ReleaseMutex();// unlock
                 }
             }
             else

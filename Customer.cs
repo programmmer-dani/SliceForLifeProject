@@ -9,17 +9,17 @@ namespace pizzeria
             this._id = id;
         }
 
-        public void start(Mutex orderMutex, Mutex pickupMutex, Mutex workingsurfaceMutex)
+        public void start()
         {
-            try { life(orderMutex, pickupMutex, workingsurfaceMutex); }
+            try { life(); }
             catch (Exception e)
             {
                 System.Console.WriteLine(e);
-                start(orderMutex, pickupMutex, workingsurfaceMutex);
+                start();
             }
         }
 
-        public void life(Mutex orderMutex, Mutex pickupMutex, Mutex workingsurfaceMutex) // customer: feel free to add instructions to make it thread safe.
+        public void life() // customer: feel free to add instructions to make it thread safe.
         {
             Thread.Sleep(new Random().Next(50, 200));
 
@@ -29,9 +29,9 @@ namespace pizzeria
 
             PizzaOrder p = new();
 
-            orderMutex.WaitOne(); // waits untill safe to enter
+            Program.orderMutex.WaitOne(); // waits untill safe to enter
             Program.order.AddFirst(p);
-            orderMutex.ReleaseMutex(); // releases lock (allowing others to enter)
+            Program.orderMutex.ReleaseMutex(); // releases lock (allowing others to enter)
 
             // wait a bit
             Console.WriteLine($"Customer {_id} waits for a pizza slice");
@@ -44,8 +44,8 @@ namespace pizzeria
 
             PizzaDish pizza;
             var temp = false;
-            
-            pickupMutex.WaitOne(); // lock
+
+            Program.pickupMutex.WaitOne(); // lock
             pizza = Program.pickUp.First(); // ERROR: is empty list
             //remove one slice
             pizza.RemoveSlice();
@@ -55,7 +55,7 @@ namespace pizzeria
                 Program.pickUp.RemoveFirst();
                 temp = true;
             }
-            pickupMutex.ReleaseMutex(); // unlock
+            Program.pickupMutex.ReleaseMutex(); // unlock
 
             if (temp)
             {

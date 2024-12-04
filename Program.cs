@@ -54,7 +54,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < customers.Length - 1; i++)
             {
-                Thread thread = new Thread(() => customers[i].start(orderMutex, pickupMutex, workingsurfaceMutex));
+                Thread thread = new Thread(() => customers[i].start());
                 thread.Start();
             }
         }
@@ -63,7 +63,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         {
             for (int i = 0; i < pizzaioli.Length - 1; i++)
             {
-                Thread thread = new Thread(() => pizzaioli[i].start(orderMutex, pickupMutex, workingsurfaceMutex));
+                Thread thread = new Thread(() => pizzaioli[i].start());
                 thread.Start(); // DANI: maybe put in list so threads can be called to join later on??
             }
         }
