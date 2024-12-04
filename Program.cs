@@ -66,12 +66,12 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         private static void ActivateCustomers() // todo: implement this method
         {
-            for (int i = 0; i < customers.Length - 1; i++) { customerThreads[i].Start(); }
+            for (int i = 0; i < customers.Length; i++) { customerThreads[i].Start(); }
         }
 
         private static void ActivatePizzaioli() //todo: implement this method
         {
-            for (int i = 0; i < pizzaioli.Length - 1; i++) { pizzaioliThreads[i].Start(); }
+            for (int i = 0; i < pizzaioli.Length; i++) { pizzaioliThreads[i].Start(); }
         }
 
         private static void InitPeople()
