@@ -6,16 +6,23 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 {
     internal class Program // feel free to add methods/variables to this class
     {
-        public static int n_slices = 4; // Number of slices per pizza, 
+        public static int n_slices = 8; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 20; // must be a multiple of n_slices, default: 1000
+                                        // IF n_slices INCREASED, NEW BUGS OCCUR
+        public static int n_customers = 120; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
+        public static Semaphore orderSemaphore = new Semaphore(0, n_customers); // starts locked until customer unlocks
+        public static Mutex orderMutex = new Mutex();
+        public static Semaphore pickupSemaphore = new Semaphore(0, n_customers);
+        public static Mutex pickupMutex = new Mutex();
+        public static Mutex workingsurfaceMutex = new Mutex();
+        public static Thread[] pizzaioliThreads = new Thread[n_customers];
+        public static Thread[] customerThreads = new Thread[n_customers];
 
         //do not change any class variable under this line
         public static LinkedList<PizzaOrder> order = new();
         public static LinkedList<PizzaDish> pickUp = new();
         public static LinkedList<PizzaSlice> workingsurface = new();
-
         public static Pizzaiolo[] pizzaioli = new Pizzaiolo[n_pizzaioli];
         public static Customer[] customers = new Customer[n_customers];
         static void Main(string[] args)
@@ -39,43 +46,33 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             System.Console.WriteLine("customers active");
             // insert code here if necessary
 
-            // DANI: join all the threads
+            //finish.WaitOne(); // REMOVE
+            Thread t = new Thread(() => delay());  // REMOVE
+            t.Start(); // REMOVE
+            t.Join(); // Remove
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
             Console.WriteLine($"Pickup location: There are {pickUp.Count} pizzas left.");
             Console.WriteLine($"Working location: There are {workingsurface.Count} slices left.");
             Console.WriteLine($"Order location: There are {order.Count} orders left.");
+
         }
 
-        private static void ActivateCustomers() // todo: implement this method
-        {
-            for (int i = 0; i < customers.Length-1; i++)
-            {
-                Thread thread = new Thread(() => customers[i].start());
-                thread.Start();
-            }
-        }
-
-        private static void ActivatePizzaioli() //todo: implement this method
-        {
-            for (int i = 0; i < pizzaioli.Length-1; i++)
-            {
-                Thread thread = new Thread(() => pizzaioli[i].start());
-                thread.Start(); // DANI: maybe put in list so threads can be called to join later on??
-            }
-        }
-
+        public static void delay() { Thread.Sleep(1000); }  // delays final cw's (lines: 55 t/m 58)
+        private static void ActivateCustomers() { for (int i = 0; i < customers.Length; i++) { customerThreads[i].Start(); } }// todo: implement this method
+        private static void ActivatePizzaioli() { for (int i = 0; i < pizzaioli.Length; i++) { pizzaioliThreads[i].Start(); } } //todo: implement this method
         private static void InitPeople()
         {
             for (int i = 0; i < n_customers; i++)
             {
-                customers[i] = new Customer(i + 1);
-                pizzaioli[i] = new Pizzaiolo(i + 1);
+                Pizzaiolo pizziolo = new Pizzaiolo(i + 1);
+                Customer customer = new Customer(i + 1);
+                pizzaioliThreads[i] = new Thread(() => pizziolo.start());
+                customerThreads[i] = new Thread(() => customer.start());
             }
         }
     }
-
     public enum OrderState //DO NOT TOUCH THIS ENUM
     {
         Ordered,
@@ -125,7 +122,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             return new PizzaSlice(sliceId);
         }
     }
-
     public class PizzaSlice //DO NOT TOUCH THIS CLASS
     {
         private string _id;
@@ -134,6 +130,5 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //constructor
             _id = id;
         }
-
     }
 }
