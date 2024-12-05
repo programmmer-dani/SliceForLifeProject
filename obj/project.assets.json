@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/daniel/SliceForLifeProject/pizzeria.csproj",
+      "projectUniqueName": "/Users/daniel/SliceForLifeProject-1/pizzeria.csproj",
       "projectName": "pizzeria",
-      "projectPath": "/Users/daniel/SliceForLifeProject/pizzeria.csproj",
+      "projectPath": "/Users/daniel/SliceForLifeProject-1/pizzeria.csproj",
       "packagesPath": "/Users/daniel/.nuget/packages/",
-      "outputPath": "/Users/daniel/SliceForLifeProject/obj/",
+      "outputPath": "/Users/daniel/SliceForLifeProject-1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/daniel/.nuget/NuGet/NuGet.Config"

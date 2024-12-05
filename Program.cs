@@ -6,12 +6,11 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 {
     internal class Program // feel free to add methods/variables to this class
     {
-        public static int n_slices = 8; // Number of slices per pizza, 
+        public static int n_slices = 4; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-                                        // IF n_slices INCREASED, NEW BUGS OCCUR
         public static int n_customers = 120; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
-        public static Semaphore orderSemaphore = new Semaphore(0, n_customers); // starts locked until customer unlocks
+        public static Semaphore orderSemaphore = new Semaphore(0, n_customers);
         public static Mutex orderMutex = new Mutex();
         public static Semaphore pickupSemaphore = new Semaphore(0, n_customers);
         public static Mutex pickupMutex = new Mutex();
@@ -37,19 +36,17 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //do not change any code of the following 3 function call. You can add code before and after them
             //init pizzaioli and customers
             InitPeople();
-            Console.WriteLine("people initiated");
             //activate pizzaioli
             ActivatePizzaioli();
-            System.Console.WriteLine("pizzaioli active");
             //activate customers
             ActivateCustomers();
-            System.Console.WriteLine("customers active");
             // insert code here if necessary
 
-            //finish.WaitOne(); // REMOVE
-            Thread t = new Thread(() => delay());  // REMOVE
-            t.Start(); // REMOVE
-            t.Join(); // Remove
+            for (int i = 0; i < customerThreads.Length; i++)
+            {
+                customerThreads[i].Join();
+                pizzaioliThreads[i].Join();
+            }
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
@@ -58,8 +55,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             Console.WriteLine($"Order location: There are {order.Count} orders left.");
 
         }
-
-        public static void delay() { Thread.Sleep(1000); }  // delays final cw's (lines: 55 t/m 58)
         private static void ActivateCustomers() { for (int i = 0; i < customers.Length; i++) { customerThreads[i].Start(); } }// todo: implement this method
         private static void ActivatePizzaioli() { for (int i = 0; i < pizzaioli.Length; i++) { pizzaioliThreads[i].Start(); } } //todo: implement this method
         private static void InitPeople()
