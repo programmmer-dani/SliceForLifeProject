@@ -47,7 +47,10 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             System.Console.WriteLine("customers active");
             // insert code here if necessary
 
-            finish.WaitOne(); // REMOVE
+            //finish.WaitOne(); // REMOVE
+            Thread t = new Thread(() => delay());  // REMOVE
+            t.Start(); // REMOVE
+            t.Join();
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
@@ -57,16 +60,9 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 
         }
 
-        private static void ActivateCustomers() // todo: implement this method
-        {
-            for (int i = 0; i < customers.Length; i++) { customerThreads[i].Start(); }
-        }
-
-        private static void ActivatePizzaioli() //todo: implement this method
-        {
-            for (int i = 0; i < pizzaioli.Length; i++) { pizzaioliThreads[i].Start(); }
-        }
-
+        public static void delay() { Thread.Sleep(1000); }  // delays final cw's (lines: 55 t/m 58)
+        private static void ActivateCustomers() { for (int i = 0; i < customers.Length; i++) { customerThreads[i].Start(); } }// todo: implement this method
+        private static void ActivatePizzaioli() { for (int i = 0; i < pizzaioli.Length; i++) { pizzaioliThreads[i].Start(); } } //todo: implement this method
         private static void InitPeople()
         {
             for (int i = 0; i < n_customers; i++)
@@ -78,7 +74,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             }
         }
     }
-
     public enum OrderState //DO NOT TOUCH THIS ENUM
     {
         Ordered,
@@ -128,7 +123,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             return new PizzaSlice(sliceId);
         }
     }
-
     public class PizzaSlice //DO NOT TOUCH THIS CLASS
     {
         private string _id;
@@ -137,6 +131,5 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //constructor
             _id = id;
         }
-
     }
 }
