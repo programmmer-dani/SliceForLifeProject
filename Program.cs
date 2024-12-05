@@ -6,9 +6,9 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
 {
     internal class Program // feel free to add methods/variables to this class
     {
-        public static int n_slices = 8; // Number of slices per pizza, 
+        public static int n_slices = 10; // Number of slices per pizza, 
                                         // maximum amount of customers per pizza default: 4
-        public static int n_customers = 120; // must be a multiple of n_slices, default: 1000
+        public static int n_customers = 1000; // must be a multiple of n_slices, default: 1000
         public static int n_pizzaioli = n_customers; // must be the same as n_customers
         public static Semaphore orderSemaphore = new Semaphore(0, n_customers); // starts locked until customer unlocks
         public static Mutex orderMutex = new Mutex();

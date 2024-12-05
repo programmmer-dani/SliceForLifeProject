@@ -15,6 +15,7 @@ namespace pizzeria
         }
         public void life() // pizzaiolo: feel free to add instructions to make it thread safe.
         {
+
             Thread.Sleep(new Random().Next(50, 200));
 
             PizzaOrder p;// = new();
@@ -53,8 +54,11 @@ namespace pizzeria
             {
                 Program.workingsurface.AddFirst(s);
                 //Console.WriteLine($"Pizzaiolo {_id} deposited a slice."); //this is for debug purposes
-                if (Program.workingsurface.Count == Program.n_slices)
+                if (Program.workingsurface.Count == Program.n_slices) // not true
                 {
+                    Program.workingsurface.Clear();
+                    Program.workingsurfaceMutex.ReleaseMutex();
+
                     Program.pickupMutex.WaitOne(); // claim pickup counter
                     Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString())); // 4 unlocks for pickup counter
                     Console.WriteLine($"Pizzaiolo {_id} completed the pizza."); //this is for debug purposes
@@ -67,9 +71,8 @@ namespace pizzeria
                     }
 
                     Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
-                    Program.workingsurface.Clear();
                 }
-                Program.workingsurfaceMutex.ReleaseMutex();
+                else { Program.workingsurfaceMutex.ReleaseMutex(); }
             }
             else
             {
