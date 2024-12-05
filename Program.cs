@@ -49,7 +49,7 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
             //finish.WaitOne(); // REMOVE
             Thread t = new Thread(() => delay());  // REMOVE
             t.Start(); // REMOVE
-            t.Join();
+            t.Join(); // Remove
 
             // DO NOT ADD OR MODIFY CODE AFTER THIS LINE, if you do, your assignment will be NVL
             Console.WriteLine("All should customers have eaten a pizza slice.");
