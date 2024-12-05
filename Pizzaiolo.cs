@@ -48,6 +48,7 @@ namespace pizzeria
                                                             //      add the pizza to the pick up
 
             Program.workingsurfaceMutex.WaitOne();
+            Console.WriteLine($"Pizzaiolo {_id} completed a slice."); //this is for debug purposes
             if (Program.workingsurface.Count < Program.n_slices)
             {
                 Program.workingsurface.AddFirst(s);
@@ -56,7 +57,7 @@ namespace pizzeria
                 {
                     Program.pickupMutex.WaitOne(); // claim pickup counter
                     Program.pickUp.AddFirst(new PizzaDish(Program.n_slices, s.ToString())); // 4 unlocks for pickup counter
-                    Console.WriteLine($"Pizzaiolo {_id} finished a slice."); //this is for debug purposes
+                    Console.WriteLine($"Pizzaiolo {_id} completed the pizza."); //this is for debug purposes
                     Program.pickupMutex.ReleaseMutex(); // release pickup counter
 
                     // n_slices orders are now ready
