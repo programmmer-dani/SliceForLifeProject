@@ -64,6 +64,7 @@ namespace pizzeria
                     {
                         Program.pickupSemaphore.Release(); // signal slices are ready to get picked up (only after the whole pizza is ready) 
                     }
+
                     Console.WriteLine($"Pizzaiolo {_id} deposited a pizza {s.ToString()}."); //this is for debug purposes
                     Program.workingsurface.Clear();
                 }
