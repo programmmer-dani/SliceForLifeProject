@@ -16,7 +16,6 @@ namespace pizzeria //this is useless, if you remove it your assignment will be N
         public static Semaphore pickupSemaphore = new Semaphore(0, n_customers);
         public static Mutex pickupMutex = new Mutex();
         public static Mutex workingsurfaceMutex = new Mutex();
-        public static Semaphore finish = new Semaphore(0, 1); // REMOVE
         public static Thread[] pizzaioliThreads = new Thread[n_customers];
         public static Thread[] customerThreads = new Thread[n_customers];
 
