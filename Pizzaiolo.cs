@@ -17,7 +17,7 @@ namespace pizzeria
         {
             Thread.Sleep(new Random().Next(50, 200));
 
-            PizzaOrder p = new();
+            PizzaOrder p;// = new();
             Program.orderMutex.WaitOne();
 
             Console.WriteLine($"Pizzaiolo {_id} is about to take the pizza order");
