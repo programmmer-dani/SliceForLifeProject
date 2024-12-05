@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4KSXmwrchx5r0d2euZgkT/Z+DNBMNqua574Sl2UtQGCCKeqz2qQDVbzB+dGFciszfzBMYmxNnVRTfHXjYW3zuw==",
+  "dgSpecHash": "9Uk0Us9tXa0HKBWtowiDbNyQP3ThgW31s4bPiDTWqXHo1wa9SIjp7MJnw507lnADwY0RW3RRSQBB1FonGKA6mQ==",
   "success": true,
-  "projectFilePath": "/Users/daniel/SliceForLifeProject/pizzeria.csproj",
+  "projectFilePath": "/Users/daniel/SliceForLifeProject-1/pizzeria.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
